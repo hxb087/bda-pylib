@@ -10,6 +10,8 @@ import argparse
 import numpy as np
 import pandas as pd
 import re
+import warnings
+warnings.filterwarnings("ignore")
 
 from bilstm_crf import call_bilstm_crf
 
@@ -32,7 +34,7 @@ def chinese_wordsegment(infile, col='sentence', append=True):
 
     return data
 
-def df_save(data, save_file='result.csv'):
+def df_save(data, save_file='out/result.csv'):
     data.to_csv(save_file, encoding='utf_8_sig', index=None, header=True)
     return
 
@@ -47,14 +49,14 @@ def cut_sent(para):
     return para.split("\n")
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', help='input data, (csv)', default='test_data.csv', type=str)
-    parser.add_argument('--selCol', help='text', default='sentence', type=str)
-    parser.add_argument('--append', help='是否追加一列结果数据', default='True', type=bool)
-    parser.add_argument('--output_file', help='output file', default='result.csv', type=str)
-
-    args = parser.parse_args()
-
-    data = chinese_wordsegment(args.input_file, args.selCol, args.append)
-    df_save(data, save_file=args.output_file)
+# if __name__ == '__main__':
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('--input_file', help='input data, (csv)', default='test_data.csv', type=str)
+#     parser.add_argument('--selCol', help='text', default='sentence', type=str)
+#     parser.add_argument('--append', help='是否追加一列结果数据', default='True', type=bool)
+#     parser.add_argument('--output_file', help='output file', default='result.csv', type=str)
+#
+#     args = parser.parse_args()
+#
+#     data = chinese_wordsegment(args.input_file, args.selCol, args.append)
+#     df_save(data, save_file=args.output_file)
