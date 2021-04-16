@@ -15,7 +15,6 @@ def main(args):
     np.random.seed(9876789)
 
     df = pd.read_csv(args.train_data_path)
-    # df = pd.read_csv("../data/sample_linear_regression_data.csv")
 
     feature = args.feature.split(",")
     s1 = ' + '.join(feature)
@@ -32,26 +31,11 @@ def main(args):
         results = smf.wls(s, data=df).fit(use_t=True)
     else:
         print("No this type!!!")
+        exit(0)
 
     print("**********************************************************************************\n")
-
-    # print(" Model: ", results.model.__class__.__name__)
-    # print(" R-squared: %#6.4f" % results.rsquared)
-    # print("Adj. R-squared: %#6.4f" % results.rsquared_adj)
-    # print("F-statistic: %#6.4f" % results.fvalue)
-    # print("Prob (F-statistic): %#6.4f" % results.f_pvalue)
-    # print("Log-Likelihood: %#6.4f" % results.llf)
-    # print("AIC: %#6.4f" % results.aic)
-    # print("BIC: %#6.4f" % results.bic)
-
     alpha = args.alpha
-    # print("[" + str(alpha / 2.0), results.conf_int(alpha)[0])
-    # print(str(1 - alpha / 2.0) + "]", results.conf_int(alpha)[1])
-    # print("coef:\n", results.params)
-    # print("P>|t|:\n", results.pvalues)
-    # print("std err:\n", results.bse)
-    # print("t:\n", results.tvalues)
-    print(results.summary())
+    # print(results.summary())
 
     data_t = {"coef": results.params, "std err": results.bse, "t": results.tvalues, "P>|t|": results.pvalues,
               "[" + str(alpha / 2.0): results.conf_int(alpha)[0],
@@ -67,17 +51,6 @@ def main(args):
     jb, jbpv, skew, kurtosis = jarque_bera(results.wresid)
     omni, omnipv = omni_normtest(results.wresid)
 
-    # print("Omnibus: %#6.4f" % omni)
-    # print("Prob(Omnibus): %#6.4f" % omnipv)
-    # print("Skew: %#6.4f" % skew)
-    # print("Kurtosis: %#6.4f" % kurtosis)
-    # # print("Durbin-Watson: %#6.4f" % kurtosis)
-    #
-    # # print("Omnibus: %#6.4f", prsquared)
-    # print("Durbin-Watson: %#8.3f" % durbin_watson(results.wresid))
-    # print("Jarque-Bera (JB): %#8.3f" % jb)
-    # print("Prob(JB): %#8.3g" % jbpv)
-    # print("Cond. No.: %#8.3g" % results.diagn['condno'])
 
     title = ["Model", "R-squared", "Adj. R-squared", "F-statistic", "Prob (F-statistic)", "Log-Likelihood", "AIC",
              "BIC",
@@ -100,7 +73,6 @@ def main(args):
     if len(feature) == 1:
         x = np.array(df[feature]).reshape(-1, 1)
         y = np.array(df[s2]).reshape(-1, 1)
-
         plt.figure(facecolor='white', figsize=(10, 5))
         plt.scatter(x, y, marker='x')
         plt.plot(x, predicted, c='r')
@@ -111,12 +83,9 @@ def main(args):
         plt.ylabel(s2)
         plt.title(title)
         plt.grid()
-        # 显示图形
-        # plt.show()
         plt.savefig(args.data_png, format='png')
 
     elif len(feature) == 2:
-        # fig = plt.figure()
         from mpl_toolkits.mplot3d import Axes3D
         ax1 = plt.axes(projection='3d')
 
@@ -128,7 +97,6 @@ def main(args):
         ax1.set_xlabel(feature[0])
         ax1.set_ylabel(feature[1])
         ax1.set_zlabel(s2)
-        # plt.show()
         plt.savefig(args.data_png, format='png')
     else:
         print("The number of feature is big than 2 ,no plot!")

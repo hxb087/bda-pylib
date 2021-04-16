@@ -1,0 +1,71 @@
+consumes:
+- "application/json"
+produces:
+- "application/json"
+
+tags:
+- "Ws"
+summary: "中文文本分词标注接口，POST方式，每次支持处理多篇文章"
+description: "包括人名、地名、机构名；POST方式。"
+parameters:
+- in: "body"
+  name: "body"
+  description: "进行中文文本分析的文本，utf8编码"
+  required: true
+  x-nullable: true
+  schema:
+    type: "object"
+    properties:
+      text:
+        type: "string"
+        format: "string"
+        x-nullable: true
+        example: "姚明，1989年4月17日出生于中国上海。"
+responses:
+  200:
+    description: "多篇文章中文文本分析结果"
+    schema:
+      $ref: "#/definitions/MultiWsResponse"
+
+definitions:
+  MultiWsResponse:
+    allOf:
+    - properties:
+        wss:
+          type: "array"
+          items:
+            $ref: "#/definitions/Wss"
+        total:
+          type: "integer"
+          format: "int32"
+    - $ref: "#/definitions/ResponseHeader"
+  Wss:
+    allOf:
+     - $ref: "#/definitions/WsArray"
+
+  WsArray:
+#    type: "object"
+#    properties:
+#      Wss:
+#        type: "array"
+#        items:
+#          $ref: "#/definitions/Ws"
+#  Ws:
+    type: "object"
+    properties:
+      word:
+        type: "string"
+      tag:
+        type: "string"
+
+  ResponseHeader:
+    type: "object"
+    required:
+    - "message"
+    - "status"
+    properties:
+      message:
+        type: "string"
+      status:
+        type: "integer"
+        format: "int32"
